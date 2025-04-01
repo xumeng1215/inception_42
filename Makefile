@@ -1,28 +1,39 @@
-# Makefile
-
-# Variables
-DOCKER_COMPOSE_FILE=srcs/docker-compose.yml
-
-
-all: build up
+DOCKER_COMPOSE_PATH = srcs/docker-compose.yml
+all: up
 
 build:
-	@echo "...building docker images for all services..."
-	docker-compose -f $(DOCKER_COMPOSE_FILE) build
-up:
-	@echo "...starting all containers..."
-	docker-compose -f $(DOCKER_COMPOSE_FILE) up -d
-down:
-	@echo "...stop and removing all containers..."
-	docker-compose -f $(DOCKER_COMPOSE_FILE) down
-log:
-	@echo "...showing logs for all services..."
-	docker-compose -f $(DOCKER_COMPOSE_FILE) logs --follow
-clean:
-	@echo "...clean up: removing containers, images and volumns..."
-	docker-compose -f $(DOCKER_COMPOSE_FILE) down --rmi all --volumes
-re: clean all
+	docker compose -f $(DOCKER_COMPOSE_PATH) build
 
-.PHONY: all build up down logs clean re
+up:
+	docker compose -f $(DOCKER_COMPOSE_PATH) up -d
+
+down:
+	docker compose -f $(DOCKER_COMPOSE_PATH) down --volumes --rmi all
+
+stop:
+	docker compose -f $(DOCKER_COMPOSE_PATH) stop
+
+start:
+	docker compose -f $(DOCKER_COMPOSE_PATH) start
+
+logs:
+	docker compose -f $(DOCKER_COMPOSE_PATH) logs -f
+
+clean:
+	docker compose -f $(DOCKER_COMPOSE_PATH) down --volumes --rmi all
+
+rebuild: down build up
+
+help:
+	@echo "Makefile for Docker Project"
+	@echo "Available commands:"
+	@echo "  build   - Build Docker images"
+	@echo "  up      - Start containers in detached mode"
+	@echo "  down    - Stop and remove containers"
+	@echo "  stop    - Stop running containers"
+	@echo "  start   - Start stopped containers"
+	@echo "  logs    - View logs of containers"
+	@echo "  clean   - Remove containers, volumes, and images"
+	@echo "  rebuild - Rebuild the images and restart containers"
 
 
