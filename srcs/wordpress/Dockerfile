@@ -24,6 +24,8 @@ RUN mkdir -p /var/www/html && \
 	tar -xzf /tmp/wordpress.tar.gz -C /var/www/html --strip-components=1 && \
 	rm /tmp/wordpress.tar.gz
 
+RUN sed -i 's/^listen = 127.0.0.1:9000/listen = 0.0.0.0:9000/' /etc/php81/php-fpm.d/www.conf
+
 # Copy custom wp-config.php
 COPY wp-config.php /var/www/html/wp-config.php
 

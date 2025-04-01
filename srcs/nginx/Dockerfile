@@ -12,6 +12,8 @@ RUN mkdir -p /etc/nginx/ssl && \
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
+# COPY test.html /var/www/html/test.html
+
 VOLUME /var/www/html
 
 

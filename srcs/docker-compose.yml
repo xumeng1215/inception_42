@@ -21,9 +21,9 @@ services:
       - wordpress:/var/www/html
     environment:
       - WORDPRESS_DB_HOST=mariadb
-      - WORDPRESS_DB_NAME=wordpress
-      - WORDPRESS_DB_USER=wp_user
-      - WORDPRESS_DB_PASSWORD=wp_password
+      - WORDPRESS_DB_NAME=${MYSQL_DATABASE}
+      - WORDPRESS_DB_USER=${MYSQL_USER}
+      - WORDPRESS_DB_PASSWORD=${MYSQL_PASSWORD}
     networks:
       - inception_network
     restart: always
@@ -34,13 +34,13 @@ services:
     volumes:
       - mariadb:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=root_password
-      - MYSQL_DATABASE=wordpress
-      - MYSQL_USER=wp_user
-      - MYSQL_PASSWORD=wp_password
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     networks:
       - inception_network
-    restart: always
+    # restart: always
 
 volumes:
   wordpress:
@@ -58,4 +58,5 @@ volumes:
 
 networks:
   inception_network:
+    name: inception_network
     driver: bridge
