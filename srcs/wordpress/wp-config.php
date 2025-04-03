@@ -4,7 +4,7 @@ define('DB_NAME', 'wordpress_database');
 define('DB_USER', 'user1');
 define('DB_PASSWORD', '1234');
 define('DB_HOST', 'mariadb');
-define('DB_CHARSET', 'utf8mb4');
+define('DB_CHARSET', 'utf8');
 define('DB_COLLATE', '');
 
 $table_prefix = 'wp_';

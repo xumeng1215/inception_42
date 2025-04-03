@@ -22,6 +22,10 @@ logs:
 clean:
 	docker compose -f $(DOCKER_COMPOSE_PATH) down --volumes --rmi all
 
+reset_data:
+	rm -rf data/mariadb/*
+	rm -rf data/wordpress/*
+
 rebuild: down build up
 
 help:
