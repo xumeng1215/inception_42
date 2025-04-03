@@ -16,6 +16,7 @@ RUN apk add --no-cache \
 	php81-xml \
 	php81-zip \
 	curl \
+	mysql-client\
 	tar
 
 # Download and extract WordPress
