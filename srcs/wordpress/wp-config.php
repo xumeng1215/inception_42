@@ -1,10 +1,10 @@
 # wordpress/wp-config.php
 <?php
-define('DB_NAME', getenv('WORDPRESS_DB_NAME'));
-define('DB_USER', getenv('WORDPRESS_DB_USER'));
-define('DB_PASSWORD', getenv('WORDPRESS_DB_PASSWORD'));
-define('DB_HOST', getenv('WORDPRESS_DB_HOST'));
-define('DB_CHARSET', 'utf8');
+define('DB_NAME', 'wordpress_database');
+define('DB_USER', 'user1');
+define('DB_PASSWORD', '1234');
+define('DB_HOST', 'mariadb');
+define('DB_CHARSET', 'utf8mb4');
 define('DB_COLLATE', '');
 
 $table_prefix = 'wp_';

@@ -11,7 +11,6 @@
 
 # RUN chmod +x /init.sh
 
-# VOLUME /var/lib/mysql
 
 # EXPOSE 3306
 
@@ -24,6 +23,8 @@ FROM debian:stable
 RUN apt update -y && apt install -y mariadb-server
 
 COPY init.sh /tmp/init.sh
+
+VOLUME /var/lib/mysql
 
 ENTRYPOINT ["bash", "/tmp/init.sh"]
 
