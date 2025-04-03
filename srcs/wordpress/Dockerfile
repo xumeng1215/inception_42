@@ -26,14 +26,16 @@ RUN mkdir -p /var/www/html && \
 	rm /tmp/wordpress.tar.gz
 
 RUN sed -i 's/^listen = 127.0.0.1:9000/listen = 0.0.0.0:9000/' /etc/php81/php-fpm.d/www.conf
+RUN sed -i 's/^;clear_env = no/clear_env = no/' /etc/php81/php-fpm.d/www.conf
 
 # Copy custom wp-config.php
 COPY wp-config.php /var/www/html/wp-config.php
 
 # Set permissions
 RUN chown -R nobody:nobody /var/www/html
+RUN chmod -R 755 /var/www/html
 
-WORKDIR /var/www/html
+VOLUME /var/www/html
 
 EXPOSE 9000
 

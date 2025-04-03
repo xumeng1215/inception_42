@@ -45,7 +45,7 @@ services:
       - MYSQL_PASSWORD=${WORDPRESS_DB_PASSWORD}
     networks:
       - inception
-    # restart: on-failure
+    restart: on-failure
 
 volumes:
   wordpress:
