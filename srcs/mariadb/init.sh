@@ -23,6 +23,7 @@ EOSQL
 # Stop the background MariaDB server
 mysqladmin shutdown
 
+sed -i "s/127.0.0.1/0.0.0.0/" /etc/mysql/mariadb.conf.d/50-server.cnf
 
 # Start MariaDB server in the foreground
 exec "$@"

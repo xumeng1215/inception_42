@@ -1,7 +1,7 @@
 # nginx/Dockerfile
-FROM alpine:3.18
+FROM debian:stable
 
-RUN apk add --no-cache nginx openssl
+RUN apt update; apt install -y nginx openssl
 
 # Generate self-signed TLS certificate
 RUN mkdir -p /etc/nginx/ssl && \
@@ -15,7 +15,6 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # COPY test.html /var/www/html/test.html
 
 VOLUME /var/www/html
-
 
 EXPOSE 443
 

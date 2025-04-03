@@ -3,33 +3,38 @@
 services:
   nginx:
     build: ./nginx
+    image: nginx_i
     container_name: nginx
     volumes:
       - wordpress:/var/www/html
     ports:
       - "443:443"
     networks:
-      - inception_network
+      - inception
     depends_on:
       - wordpress
-    restart: always
+    restart: on-failure
 
   wordpress:
     build: ./wordpress
+    image: wordpress_i
     container_name: wordpress
     volumes:
       - wordpress:/var/www/html
+    depends_on:
+      - mariadb
     environment:
       - WORDPRESS_DB_HOST=mariadb
       - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
       - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
       - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
     networks:
-      - inception_network
-    restart: always
+      - inception
+    restart: on-failure
 
   mariadb:
     build: ./mariadb
+    image: mariadb_i
     container_name: mariadb
     volumes:
       - mariadb:/var/lib/mysql
@@ -39,10 +44,8 @@ services:
       - MYSQL_USER=${WORDPRESS_DB_USER}
       - MYSQL_PASSWORD=${WORDPRESS_DB_PASSWORD}
     networks:
-      - inception_network
-    ports:
-      - "3306:3306"
-    # restart: always
+      - inception
+    # restart: on-failure
 
 volumes:
   wordpress:
@@ -59,6 +62,5 @@ volumes:
       device: ../data/mariadb
 
 networks:
-  inception_network:
-    name: inception_network
+  inception:
     driver: bridge
