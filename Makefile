@@ -1,20 +1,19 @@
 DOCKER_COMPOSE_PATH = srcs/docker-compose.yml
 all: up
 
+# build images
 build:
 	docker compose -f $(DOCKER_COMPOSE_PATH) build
 
+# start containers
+# -d: detached mode
 up:
 	docker compose -f $(DOCKER_COMPOSE_PATH) up -d
 
+# stop containers
+# --volumes: remove named volumes declared in the `volumes` section
 down:
-	docker compose -f $(DOCKER_COMPOSE_PATH) down --volumes --rmi all
-
-stop:
-	docker compose -f $(DOCKER_COMPOSE_PATH) stop
-
-start:
-	docker compose -f $(DOCKER_COMPOSE_PATH) start
+	docker compose -f $(DOCKER_COMPOSE_PATH) down --volumes
 
 logs:
 	docker compose -f $(DOCKER_COMPOSE_PATH) logs -f
@@ -22,22 +21,14 @@ logs:
 clean:
 	docker compose -f $(DOCKER_COMPOSE_PATH) down --volumes --rmi all
 
-reset_data:
+mk_data_dir:
+	mkdir -p data/mariadb
+	mkdir -p data/wordpress
+
+reset_data_dir:
 	rm -rf data/mariadb/*
 	rm -rf data/wordpress/*
 
 rebuild: down build up
 
-help:
-	@echo "Makefile for Docker Project"
-	@echo "Available commands:"
-	@echo "  build   - Build Docker images"
-	@echo "  up      - Start containers in detached mode"
-	@echo "  down    - Stop and remove containers"
-	@echo "  stop    - Stop running containers"
-	@echo "  start   - Start stopped containers"
-	@echo "  logs    - View logs of containers"
-	@echo "  clean   - Remove containers, volumes, and images"
-	@echo "  rebuild - Rebuild the images and restart containers"
-
-
+.PHONY: all build up down logs clean mk_data_dir reset_data_dir rebuild

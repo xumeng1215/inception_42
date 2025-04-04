@@ -1,3 +1,4 @@
-data/
+data/mariadb
+data/wordpress
 
 srcs/.env
