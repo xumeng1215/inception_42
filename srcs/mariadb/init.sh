@@ -1,18 +1,24 @@
 #!/bin/sh
 
 set -e
+echo "-------------Initialize MariaDB data directory if empty"
+if [ ! -d "/var/lib/mysql/mysql" ]; then
+    mysql_install_db --user=mysql --datadir=/var/lib/mysql
+fi
 
-# Start MariaDB server in the background
+echo "-------------Start MariaDB server in the background"
 mysqld_safe --skip-networking &
 pid="$!"
 
-# Wait for MariaDB to be ready
-until mysqladmin ping --silent; do
-    echo "Waiting for MariaDB to start..."
+sleep 5
+
+echo "-------------Wait for MariaDB to be ready"
+until mysqladmin ping --silent --socket=/var/run/mysqld/mysqld.sock; do
+    echo "Waiting..."
     sleep 2
 done
 
-# Create database and users
+echo "-------------Create database and users"
 mysql -u root <<-EOSQL
     CREATE DATABASE IF NOT EXISTS \`$MYSQL_DATABASE\`;
     CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';
@@ -20,10 +26,14 @@ mysql -u root <<-EOSQL
     FLUSH PRIVILEGES;
 EOSQL
 
-# Stop the background MariaDB server
+echo "-------------Stop the background MariaDB server"
 mysqladmin shutdown
 
-sed -i "s/127.0.0.1/0.0.0.0/" /etc/mysql/mariadb.conf.d/50-server.cnf
+echo "-------------Comment out the 'skip-networking' line"
+sed -i "s/^skip-networking/#skip-networking/" /etc/my.cnf.d/mariadb-server.cnf
 
-# Start MariaDB server in the foreground
+echo "-------------Uncomment the 'bind-address=0.0.0.0' line"
+sed -i "s/^#bind-address=0.0.0.0/bind-address=0.0.0.0/" /etc/my.cnf.d/mariadb-server.cnf
+
+echo "-------------Start MariaDB server in the foreground CMD"
 exec "$@"

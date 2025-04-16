@@ -23,11 +23,8 @@ services:
       - wordpress:/var/www/html
     depends_on:
       - mariadb
-    environment:
-      - WORDPRESS_DB_HOST=mariadb
-      - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
-      - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
-      - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
+    env_file:
+      - .env
     networks:
       - inception
     restart: on-failure
@@ -39,10 +36,9 @@ services:
     volumes:
       - mariadb:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${WORDPRESS_DB_NAME}
-      - MYSQL_USER=${WORDPRESS_DB_USER}
-      - MYSQL_PASSWORD=${WORDPRESS_DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${WP_DB_USER}
+      - MYSQL_PASSWORD=${WP_DB_PASSWORD}
     networks:
       - inception
     restart: on-failure

@@ -1,27 +1,41 @@
 DOCKER_COMPOSE_PATH = srcs/docker-compose.yml
-all: up
+
+.PHONY: all build up down clean fclean create_data_dir reset_data_dir rebuild
+
+all: create_data_dir build up
 
 # build images
 build:
 	docker compose -f $(DOCKER_COMPOSE_PATH) build
 
-# start containers
-# -d: detached mode
+# create and start containers
 up:
 	docker compose -f $(DOCKER_COMPOSE_PATH) up -d
 
-# stop containers
-# --volumes: remove named volumes declared in the `volumes` section
+# stop and remove containers
 down:
-	docker compose -f $(DOCKER_COMPOSE_PATH) down --volumes
+	docker compose -f $(DOCKER_COMPOSE_PATH) down
 
-logs:
-	docker compose -f $(DOCKER_COMPOSE_PATH) logs -f
+# stop containers
+stop:
+	docker compose -f $(DOCKER_COMPOSE_PATH) stop
 
+# start containers
+start:
+	docker compose -f $(DOCKER_COMPOSE_PATH) start
+
+# restart containers
+restart:
+	docker compose -f $(DOCKER_COMPOSE_PATH) restart
+
+# remove containers and images 
 clean:
 	docker compose -f $(DOCKER_COMPOSE_PATH) down --volumes --rmi all
 
-mk_data_dir:
+# remove containers, volumes, and images
+fclean: clean reset_data_dir
+
+create_data_dir:
 	mkdir -p data/mariadb
 	mkdir -p data/wordpress
 
@@ -29,6 +43,5 @@ reset_data_dir:
 	rm -rf data/mariadb/*
 	rm -rf data/wordpress/*
 
-rebuild: down build up
+rebuild: fclean up
 
-.PHONY: all build up down logs clean mk_data_dir reset_data_dir rebuild
